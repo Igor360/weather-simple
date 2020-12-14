@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.spark/1.0.0/jars/microsoft-spark-2-3_2.11-1.0.0.jar" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.spark/1.0.0/jars/microsoft-spark-2-4_2.11-1.0.0.jar" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.spark/1.0.0/jars/microsoft-spark-3-0_2.12-1.0.0.jar" />
+    <content url="file://$USER_HOME$/.nuget/packages/mstest.testadapter/2.1.2/build/_common/Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/mstest.testadapter/2.1.2/build/_common/Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/mstest.testadapter/2.1.2/build/netcoreapp1.0/Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll" />
+    <content url="file://$MODULE_DIR$/../.." />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
