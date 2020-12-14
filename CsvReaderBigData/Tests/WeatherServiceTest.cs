@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using CsvReaderBigData.Models;
 using CsvReaderBigData.Services;
 using CsvReaderBigData.Servicestorss;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TinyCsvParser.Mapping;
 
 namespace CsvReaderBigData.Tests
 {
@@ -15,7 +11,8 @@ namespace CsvReaderBigData.Tests
             var weatherService = new WeatherService();
 
             var path = "Data/62318.30.11.2010.30.11.2020.1.0.0.en.utf8.00000000.csv";
-            var csvMappingResults = CsvReader.readFile(path);
+
+            var csvMappingResults = weatherService.GroupByOneMonth(CsvReader.readFile(path));
 
             var watch = new System.Diagnostics.Stopwatch();
 

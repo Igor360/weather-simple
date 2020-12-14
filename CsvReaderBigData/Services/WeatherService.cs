@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using CsvReaderBigData.Models;
 using CsvReaderBigData.Services;
@@ -20,35 +18,41 @@ namespace CsvReaderBigData.Servicestorss
             return sum / count;
         }
 
-        public Dictionary<DateTime, IEnumerable<CsvMappingResult<WeatherDetails>>> GroupByOneMonth(
+        public Dictionary<DateTime, List<CsvMappingResult<WeatherDetails>>> GroupByOneMonth(
             List<CsvMappingResult<WeatherDetails>> csvData)
         {
             var cultureInfo = new CultureInfo("en-US");
             var timeFormat = "dd.MM.yyyy HH:mm";
-            DateTime firstDate;
-            var groupedData = new Dictionary<DateTime, IEnumerable<CsvMappingResult<WeatherDetails>>>();
-            while (csvData.Count != 0)
-            {
-                firstDate = DateTime.ParseExact(csvData.Last().Result.localTime, timeFormat, cultureInfo);
-                groupedData.Add(firstDate,
-                    csvData.Where(x =>
-                        x.Result != null &&
-                        (DateTime.ParseExact(x.Result.localTime, timeFormat, cultureInfo) - firstDate).Days <=
-                        30)
-                );
-                csvData = csvData.Where(x =>
-                        x.Result != null &&
-                        (DateTime.ParseExact(x.Result.localTime, timeFormat, cultureInfo) - firstDate).Days >
-                        30)
-                    .ToList();
-            }
+            var groupedData = new Dictionary<DateTime, List<CsvMappingResult<WeatherDetails>>>();
 
-            return groupedData;
+            return csvData
+                .Where(x => x.Result?.localTime != null)
+                .Select(x => new { Date = DateTime.ParseExact(x.Result.localTime, timeFormat, cultureInfo), Data = x })
+                .GroupBy(x => $"{x.Date.Month}/{x.Date.Year}")
+                .ToDictionary(x => x.First().Date, y => y.Select(el => el.Data).ToList());
+
+
+            // DateTime firstDate;
+            // while (csvData.Count != 0)
+            // {
+            //     firstDate = DateTime.ParseExact(csvData.Last().Result.localTime, timeFormat, cultureInfo);
+            //     groupedData.Add(firstDate,
+            //         csvData.Where(x =>
+            //             x.Result != null &&
+            //             (DateTime.ParseExact(x.Result.localTime, timeFormat, cultureInfo) - firstDate).Days <=
+            //             30)
+            //     );
+            //     csvData = csvData.Where(x =>
+            //             x.Result != null &&
+            //             (DateTime.ParseExact(x.Result.localTime, timeFormat, cultureInfo) - firstDate).Days >
+            //             30)
+            //         .ToList();
+            // }
+            // return groupedData;
         }
 
-        public Dictionary<DateTime, Double> CalculateMediumTemperature(List<CsvMappingResult<WeatherDetails>> csvData)
+        public Dictionary<DateTime, Double> CalculateMediumTemperature(Dictionary<DateTime, List<CsvMappingResult<WeatherDetails>>> groupedData)
         {
-            var groupedData = this.GroupByOneMonth(csvData);
             var res = new Dictionary<DateTime, Double>();
             foreach (var entry in groupedData)
             {
@@ -59,9 +63,8 @@ namespace CsvReaderBigData.Servicestorss
             return res;
         }
 
-        public async Task<Dictionary<DateTime, Double>> CalculateMediumTemperatureByTasks(List<CsvMappingResult<WeatherDetails>> csvData)
+        public async Task<Dictionary<DateTime, Double>> CalculateMediumTemperatureByTasks(Dictionary<DateTime, List<CsvMappingResult<WeatherDetails>>> groupedData)
         {
-            var groupedData = this.GroupByOneMonth(csvData);
             var res = new Dictionary<DateTime, Double>();
 
             var taskList = new List<Task<(DateTime, double)>>();
@@ -82,9 +85,8 @@ namespace CsvReaderBigData.Servicestorss
             return res;
         }
 
-        public async Task<Dictionary<DateTime, Double>> CalculateMediumTemperatureByActors(List<CsvMappingResult<WeatherDetails>> csvData, int actorsCount = 1)
+        public async Task<Dictionary<DateTime, Double>> CalculateMediumTemperatureByActors(Dictionary<DateTime, List<CsvMappingResult<WeatherDetails>>> groupedData, int actorsCount = 1)
         {
-            var groupedData = this.GroupByOneMonth(csvData);
             var res = new Dictionary<DateTime, Double>();
 
             var calculators = new ActorPool(actorsCount);
