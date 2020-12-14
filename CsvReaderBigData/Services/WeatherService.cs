@@ -73,11 +73,11 @@ namespace CsvReaderBigData.Servicestorss
                 }));
             }
 
-            foreach(var task in taskList)
+            foreach (var task in taskList)
             {
                 var (Key, Value) = await task;
                 res.Add(Key, Value);
-            } 
+            }
 
             return res;
         }
@@ -98,11 +98,11 @@ namespace CsvReaderBigData.Servicestorss
             }
             await Task.WhenAll(taskList);
 
-            foreach(var task in taskList)
+            foreach (var task in taskList)
             {
                 var (Key, Value) = await task;
                 res.Add(Key, Value);
-            } 
+            }
 
             return res;
         }
