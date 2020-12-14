@@ -13,8 +13,8 @@
       <PackageReference Include="TinyCsvParser" Version="2.6.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Docker" />
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+      <None Update="Data/62318.30.11.2010.30.11.2020.1.0.0.en.utf8.00000000.csv" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>
